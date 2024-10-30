@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Diversamente</string>
+    <string name="logotipo">Logotipo</string>
+
+    <string name="titulo_principal">DIVERSA-MENTE</string>
+    <string name="hint_email">Ingrese su correo electrónico</string>
+    <string name="hint_password">Ingrese su contraseña</string>
+    <string name="btn_login">Iniciar sesión</string>
+    <string name="btn_signup">Crea una cuenta</string>
+    <string name="nombre_de_usuario">Nombre de usuario</string>
+    <string name="confirmar_contrase_a">Confirmar contraseña</string>
+    <string name="Registrar">Registrar</string>
+    <string name="Ya_tiene_una_cuenta">Ya tiene una cuenta</string>
+    <string name="registro">Registro</string>
+    <string name="logo_de_la_aplicaci_n">Logo de la aplicación</string>
+    <string name="contenedor_de_registro">Contenedor de registro</string>
+</resources>
