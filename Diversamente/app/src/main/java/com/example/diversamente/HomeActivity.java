@@ -29,10 +29,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
 
         findViewById(R.id.btnChatbot).setOnClickListener(v -> openChatbot());
     }
@@ -74,7 +76,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -85,6 +86,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void openChatbot() {
-        // Código para abrir el chatbot
+        Intent intent = new Intent(this, ChatbotActivity.class);
+        startActivity(intent);
     }
 }

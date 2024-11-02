@@ -33,7 +33,9 @@
             android:exported="false" />
         <activity
             android:name=".AboutActivity"
-            android:exported="false" /> <!-- Aquí se corrige la ubicación de AboutActivity -->
+            android:exported="false" />
+        <activity android:name=".ChatbotActivity"
+            android:exported="false" />
 
     </application>
 
