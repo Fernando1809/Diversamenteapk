@@ -14,4 +14,7 @@
     <string name="registro">Registro</string>
     <string name="logo_de_la_aplicaci_n">Logo de la aplicación</string>
     <string name="contenedor_de_registro">Contenedor de registro</string>
+    <string name="navigation_drawer_open">Abrir menú</string>
+    <string name="navigation_drawer_close">Cerrar menú</string>
+    <string name="logo_desc">Descripción del logo</string>
 </resources>

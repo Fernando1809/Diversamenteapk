@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "344540746657",
+    "firebase_url": "https://diversamente-1d32d-default-rtdb.firebaseio.com",
+    "project_id": "diversamente-1d32d",
+    "storage_bucket": "diversamente-1d32d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344540746657:android:c24ccf96064bdda1faf1e0",
+        "android_client_info": {
+          "package_name": "com.example.diversamente"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOx-PtUU6P7-4ozKjRzp9Si3prpAwAYmI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
