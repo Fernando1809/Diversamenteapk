@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -86,7 +88,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void openChatbot() {
-        Intent intent = new Intent(this, ChatbotActivity.class);
-        startActivity(intent);
+        try {
+            Intent intent = new Intent(getApplicationContext(), ChatbotActivity.class);
+            startActivity(intent);
+        }catch (Exception error){
+            Toast.makeText(this, error.getMessage() + "fallos", Toast.LENGTH_SHORT).show();
+        }
     }
 }

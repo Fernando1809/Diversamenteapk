@@ -1,20 +1,24 @@
 package com.example.diversamente;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 
-public class ChatbotActivity extends AppCompatActivity {
+public class ChatbotActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
@@ -23,59 +27,82 @@ public class ChatbotActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatbot);
-
-        // Configura la Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Configura el DrawerLayout y el ActionBarDrawerToggle para el menú de hamburguesa
+
+
         drawerLayout = findViewById(R.id.drawer_layout);
-        toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close);
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        // Configura el WebView
-        WebView webView = findViewById(R.id.webview_chatbot);
-        webView.setWebViewClient(new WebViewClient());
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true); // Habilita JavaScript para el widget
-        webView.loadUrl("https://app.gpt-trainer.com/widget/8feeaccbf3694ba1bab4751f423b189a");
+
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Controla el botón de menú
-        if (toggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        // Maneja las acciones según el ítem seleccionado
-        switch (id) {
-            case R.id.nav_home:
-                // Acción para el ítem "Home"
-                // Aquí puedes iniciar la actividad correspondiente o realizar otra acción
-                break;
-            case R.id.nav_about:
-                // Acción para el ítem "About"
-                break;
-            case R.id.nav_test:
-                // Acción para el ítem "Test"
-                break;
-            case R.id.nav_logout:
-                // Acción para el ítem "Logout"
-                break;
-            // Agrega más casos según los elementos de tu menú
+
+        if (id == R.id.nav_about) {
+            // Mostrar diálogo con información sobre "¿Quiénes somos?"
+            new AlertDialog.Builder(this)
+                    .setTitle("¿Quiénes somos?")
+                    .setMessage("En Diversa-mente, nos dedicamos a brindar información y apoyo en temas relacionados con la salud mental.\n" +
+                            "Nuestro objetivo es ofrecer recursos, guías y orientación para mejorar el bienestar mental de las personas.")
+                    .setPositiveButton("Aceptar", null) // Botón para cerrar el diálogo
+                    .show();
+        } else if (id == R.id.nav_home) {
+            // Acción para "Inicio"
+        } else if (id == R.id.nav_test) {
+            startActivity(new Intent(this, TestActivity.class));
+        } else if (id == R.id.nav_logout) {
+            // Mostrar diálogo de confirmación para cerrar sesión
+            new AlertDialog.Builder(this)
+                    .setTitle("Cerrar Sesión")
+                    .setMessage("¿Estás seguro de que quieres cerrar sesión?")
+                    .setPositiveButton("Sí", (dialog, which) -> {
+                        Intent intent = new Intent(this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish(); // Cierra la actividad actual
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
         }
-        drawerLayout.closeDrawer(GravityCompat.START); // Cierra el drawer después de la selección
+
+        drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void openChatbot() {
+        try {
+            Intent intent = new Intent(getApplicationContext(), ChatbotActivity.class);
+            startActivity(intent);
+        }catch (Exception error){
+            Toast.makeText(this, error.getMessage() + "fallos", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
     }
 }
