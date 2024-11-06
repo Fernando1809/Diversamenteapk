@@ -32,6 +32,7 @@
             android:textSize="18sp"
             android:textColor="#333" />
 
+
         <!-- Botón para el chatbot -->
         <Button
             android:id="@+id/btnChatbot"
