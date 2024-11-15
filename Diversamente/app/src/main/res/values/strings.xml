@@ -17,4 +17,6 @@
     <string name="navigation_drawer_open">Abrir menú</string>
     <string name="navigation_drawer_close">Cerrar menú</string>
     <string name="logo_desc">Descripción del logo</string>
+    <string name="open_menu" />
+    <string name="close_menu" />
 </resources>
