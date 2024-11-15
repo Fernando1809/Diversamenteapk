@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SaludMental">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <EditText
+            android:id="@+id/lblSaludMental"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Hola, ¿cómo estás hoy?"
+            android:layout_centerHorizontal="true"
+            android:textSize="18sp"
+            android:textColor="#333"
+            />
+
+        <Button
+            android:id="@+id/btnGood"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lblSaludMental"
+            android:layout_centerHorizontal="true"
+            android:text="Me encuentro genial"
+            />
+
+        <Button
+            android:id="@+id/btnBad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btnGood"
+            android:layout_centerHorizontal="true"
+            android:text="Quiero hablar con didi"
+            />
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

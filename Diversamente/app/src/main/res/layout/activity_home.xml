@@ -31,6 +31,23 @@
             android:text="Bienvenido a Diversamente"
             android:textSize="18sp"
             android:textColor="#333" />
+        <TextView
+            android:id="@+id/textCounter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Dias con salud mental:"
+            android:textSize="18sp"
+            android:textColor="#333" />
+
+        <TextView
+            android:id="@+id/lblCounter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text=""
+            android:textSize="18sp"
+            android:textColor="#333" />
 
 
         <!-- Botón para el chatbot -->

@@ -3,7 +3,10 @@ package com.example.diversamente;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,18 +16,31 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    Integer counter = 0;
+    TextView lblUUID;
     private DrawerLayout drawerLayout;
     private FirebaseAuth mAuth;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://diversamente-1d32d-default-rtdb.firebaseio.com/");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        lblUUID = findViewById(R.id.lblCounter);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -42,6 +58,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         findViewById(R.id.btnChatbot).setOnClickListener(v -> openChatbot());
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getCounter();
+    }
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -91,10 +113,32 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private void openChatbot() {
         try {
-            Intent intent = new Intent(getApplicationContext(), ChatbotActivity.class);
+            Intent intent = new Intent(getApplicationContext(), SaludMental.class);
             startActivity(intent);
         }catch (Exception error){
             Toast.makeText(this, error.getMessage() + "fallos", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void getCounter(){
+        databaseReference.child("users").child(user.getUid()).child("counter").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    Long counterValue = task.getResult().getValue(Long.class);
+                    if (counterValue != null) {
+                        counter = counterValue.intValue();
+                        lblUUID.setText(counter.toString());
+                        Log.d("firebase", "Counter value: " + counter);
+                    }else{
+                        lblUUID.setText("0");
+                    }
+
+                }
+            }
+        });
     }
 }
