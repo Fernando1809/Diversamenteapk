@@ -38,10 +38,6 @@
         <activity
             android:name=".ChatbotActivity"
             android:exported="false" />
-        <activity android:name=".TestActivity" />
-        <activity android:name=".ProfileActivity" />
-
-
     </application>
 
 </manifest>

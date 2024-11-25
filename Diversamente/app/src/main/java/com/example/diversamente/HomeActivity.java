@@ -5,16 +5,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,12 +28,12 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private Integer counter = 0;
-    private TextView lblUUID, lblWelcomeMessage;
+    Integer counter = 0;
+    TextView lblUUID;
     private DrawerLayout drawerLayout;
     private FirebaseAuth mAuth;
-    private FirebaseUser user;
-    private DatabaseReference databaseReference;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://diversamente-1d32d-default-rtdb.firebaseio.com/");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_home);
 
         lblUUID = findViewById(R.id.lblCounter);
-        lblWelcomeMessage = findViewById(R.id.lblWelcomeMessage); // Referencia al TextView de bienvenida
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -48,31 +48,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // Inicializar Firebase Auth y usuario
-        mAuth = FirebaseAuth.getInstance();
-        user = mAuth.getCurrentUser();
-        databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://diversamente-1d32d-default-rtdb.firebaseio.com/");
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+
         findViewById(R.id.btnChatbot).setOnClickListener(v -> openChatbot());
     }
+
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (user != null) {
-            getCounter();
-            showWelcomeMessage();
-        } else {
-            Log.e("HomeActivity", "No user is logged in");
-            Toast.makeText(this, "Usuario no autenticado", Toast.LENGTH_SHORT).show();
-        }
+        getCounter();
     }
-
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -86,11 +77,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                             "Nuestro objetivo es ofrecer recursos, guías y orientación para mejorar el bienestar mental de las personas.")
                     .setPositiveButton("Aceptar", null) // Botón para cerrar el diálogo
                     .show();
-        } else if (id == R.id.nav_perfil) {
-            // Redirigir a perfil
-            startActivity(new Intent(this, ProfileActivity.class));
+        } else if (id == R.id.nav_home) {
+            // Acción para "Inicio"
         } else if (id == R.id.nav_test) {
-            // Redirigir a test
             startActivity(new Intent(this, TestActivity.class));
         } else if (id == R.id.nav_logout) {
             // Mostrar diálogo de confirmación para cerrar sesión
@@ -98,9 +87,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     .setTitle("Cerrar Sesión")
                     .setMessage("¿Estás seguro de que quieres cerrar sesión?")
                     .setPositiveButton("Sí", (dialog, which) -> {
-                        mAuth.signOut();
                         Intent intent = new Intent(this, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mAuth.getInstance().signOut();
                         startActivity(intent);
                         finish(); // Cierra la actividad actual
                     })
@@ -111,6 +100,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
     @Override
     public void onBackPressed() {
@@ -125,37 +115,30 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         try {
             Intent intent = new Intent(getApplicationContext(), SaludMental.class);
             startActivity(intent);
-        } catch (Exception error) {
-            Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+        }catch (Exception error){
+            Toast.makeText(this, error.getMessage() + "fallos", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void getCounter() {
-        if (user != null) {
-            databaseReference.child("users").child(user.getUid()).child("counter").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        Long counterValue = task.getResult().getValue(Long.class);
-                        if (counterValue != null) {
-                            counter = counterValue.intValue();
-                            lblUUID.setText(String.valueOf(counter));
-                        } else {
-                            lblUUID.setText("0");
-                        }
-                    } else {
-                        Log.e("firebase", "Error getting data", task.getException());
-                    }
+    private void getCounter(){
+        databaseReference.child("users").child(user.getUid()).child("counter").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
                 }
-            });
-        }
-    }
+                else {
+                    Long counterValue = task.getResult().getValue(Long.class);
+                    if (counterValue != null) {
+                        counter = counterValue.intValue();
+                        lblUUID.setText(counter.toString());
+                        Log.d("firebase", "Counter value: " + counter);
+                    }else{
+                        lblUUID.setText("0");
+                    }
 
-    // Método para mostrar el nombre del usuario en la bienvenida
-    private void showWelcomeMessage() {
-        if (user != null) {
-            String welcomeText = "¡Bienvenido/a, " + user.getDisplayName() + "!";
-            lblWelcomeMessage.setText(welcomeText);
-        }
+                }
+            }
+        });
     }
 }
